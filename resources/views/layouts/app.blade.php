@@ -12,6 +12,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
     {{-- <div id="app"> --}}
@@ -28,7 +29,7 @@
                     </button>
 
                     <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
+                    <a class="navbar-brand" href="{{ url('/admin') }}">
                         {{ config('app.name', 'Laravel') }}
                     </a>
                 </div>
@@ -71,11 +72,14 @@
                     <div class="sidebar-sticky">
                         <ul class="nav flex-column">
                             <li class="nav-item">
-                                <a class="nav-link" href="/admin/orders">訂單管理</a>
+                                <a class="nav-link" href="/admin/members">會員管理</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/admin/news">退貨管理</a>
+                                <a class="nav-link" href="/admin/orders">訂單管理</a>
                             </li>
+                            {{-- <li class="nav-item">
+                                <a class="nav-link" href="/admin/news">退貨管理</a>
+                            </li> --}}
                             <li class="nav-item">
                                 <a class="nav-link" href="/admin/order">分類管理</a>
                             </li>
@@ -84,9 +88,6 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/admin/order">庫存管理</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/admin/order">會員管理</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/admin/order">優惠管理</a>

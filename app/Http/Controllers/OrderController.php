@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Message;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
@@ -24,9 +25,39 @@ class OrderController extends Controller
 
     public function index()
     {
-        $orders = Order::limit(10)->orderBy('id', 'desc')->get();
+        $orders = Order::with('user')->orderBy('id', 'desc')->get();
+        // $orders->nextPageUrl();
+        // dd($orders);
+        return view('layouts.order.index', compact('orders'))
+            ->with('order_status', $this->order_status_array);
+    }
+
+    public function statusUpdate(Request $request)
+    {
+        // dd($request->all());
+        $order = Order::find($request->order_id);
         // dd($order);
-        return view('layouts.order.orders-index', compact('orders'))
-        ->with('order_status', $this->order_status_array);
+        $order['status'] = $request->status;
+        $order->save();
+
+        return redirect()->back();
+    }
+
+    public function detail($order_number)
+    {
+        // dd($order_number);
+        $order = Order::with('orderItems')->with('coupon')->where('order_number', $order_number)->first();
+        $messages = Message::where('order_id', $order['id'])->orderBy('created_at', 'asc')->get();
+        $return_total = 0;
+        if ($order['status'] > 4) {
+            foreach ($order->orderItems as $orderItem) {
+                if ($orderItem['is_return'] == 1) {
+                    $return_total += ($orderItem['price'] * $orderItem['quantity']);
+                }
+            }
+        }
+
+        // dd($order);
+        return view('layouts.order.detail', compact('order', 'messages', 'return_total'));
     }
 }
