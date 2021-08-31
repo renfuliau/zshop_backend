@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Message;
 use App\Models\Order;
+use App\Models\Message;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -59,5 +60,19 @@ class OrderController extends Controller
 
         // dd($order);
         return view('layouts.order.detail', compact('order', 'messages', 'return_total'));
+    }
+
+    public function messageStore(Request $request)
+    {
+        // dd($request->all());
+        // $user_id = Auth::user()->id;
+        $message = new Message();
+        $message_data = $request->all();
+        $message_data['subject'] = 2;
+        $message->fill($message_data);
+        // dd($message);
+        $message->save();
+
+        return response(['message' => '回覆成功']);
     }
 }

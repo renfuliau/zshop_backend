@@ -2,8 +2,8 @@
 
 @section('content')
 
-<h2>訂單管理</h2>
-<div class="table-responsive">
+<div class="table-responsive mt-5 pt-5">
+    <h2>訂單管理</h2>
     <table class="table table-striped table-sm">
         @if (! $orders->isEmpty())
         <thead>
@@ -30,8 +30,8 @@
                     <form class="form-horizontal" method="POST" action="{{ route('order-update-status') }}">
                         {{ csrf_field() }}
                         <input type="hidden" name="order_id" value="{{ $order['id'] }}">
-                        <input type="hidden" id="status" name="status" value="{{ $order['status'] }}">
-                        <select class="selectpicker">
+                        <input type="hidden" class="status-{{ $order['id'] }}" id="status" name="status" value="{{ $order['status'] }}">
+                        <select class="selectpicker" data-order-id="{{ $order['id'] }}">
                             <option class="status" value="{{ $order['status'] }}">
                                 {{ $order_status[$order['status']] }}</option>
                             @foreach ($order_status as $key => $status)
@@ -40,10 +40,10 @@
                             @endif
                             @endforeach
                         </select>
-                        <button class="btn" type="submit">更改</button>
+                        <button class="btn border" type="submit">更改</button>
                     </form>
                 </td>
-                <td><a class="btn" href="{{route('order-detail', $order['order_number'])}}">明細</a></td>
+                <td><a class="btn border" href="{{route('order-detail', $order['order_number'])}}">明細</a></td>
             </tr>
             @endforeach
         </tbody>
@@ -70,8 +70,10 @@
 
 <script>
     $('.selectpicker').on('change', function () {
-        $('#status').val($(this).val());
-        // console.log($('.selectpicker').val());
+        console.log($(this).attr('data-order-id'));
+        var status_option = '.status-' +  $(this).attr('data-order-id');
+        console.log(status_option);
+        $(status_option).val($(this).val());
     })
 </script>
 @endsection
