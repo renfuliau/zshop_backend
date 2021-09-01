@@ -21,7 +21,7 @@ class MemberController extends Controller
 
     public function index()
     {
-        $members = User::with('userLevel')->get();
+        $members = User::with('userLevel')->where('role', 'user')->get();
         // dd($members);
         $member_level = UserLevel::get();
         // dd($member_level);

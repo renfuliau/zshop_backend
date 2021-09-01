@@ -91,20 +91,35 @@
 
 @endsection
 
-@push('scripts')
+@section('scripts')
     <script>
-        $('.selectpicker').on('change', function() {
-            console.log($(this).attr('data-member-id'));
-            var status_option = '.status-' + $(this).attr('data-member-id');
-            console.log(status_option);
-            $(status_option).val($(this).val());
-        })
+        $(document).ready(function() {
+            $('.selectpicker').on('change', function() {
+                console.log($(this).attr('data-member-id'));
+                var status_option = '.status-' + $(this).attr('data-member-id');
+                console.log(status_option);
+                $(status_option).val($(this).val());
+            })
 
-        $('.levelpicker').on('change', function() {
-            console.log($(this).attr('data-member-id'));
-            var level_option = '.level-' + $(this).attr('data-member-id');
-            console.log(level_option);
-            $(level_option).val($(this).val());
-        })
+            $('.levelpicker').on('change', function() {
+                console.log($(this).attr('data-member-id'));
+                var level_option = '.level-' + $(this).attr('data-member-id');
+                console.log(level_option);
+                $(level_option).val($(this).val());
+            })
+        });
+        // $('.selectpicker').on('change', function() {
+        //     console.log($(this).attr('data-member-id'));
+        //     var status_option = '.status-' + $(this).attr('data-member-id');
+        //     console.log(status_option);
+        //     $(status_option).val($(this).val());
+        // })
+
+        // $('.levelpicker').on('change', function() {
+        //     console.log($(this).attr('data-member-id'));
+        //     var level_option = '.level-' + $(this).attr('data-member-id');
+        //     console.log(level_option);
+        //     $(level_option).val($(this).val());
+        // })
     </script>
-@endpush
+@endsection

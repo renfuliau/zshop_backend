@@ -41,5 +41,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::post('/product-status/update', 'ProductController@statusUpdate')->name('product-update-status');
     Route::get('/product/create', 'ProductController@create')->name('product-create');
     Route::post('/product-store', 'ProductController@store')->name('product-store');
+    Route::get('/product-detail/{id}', 'ProductController@detail')->name('product-detail');
 
 });

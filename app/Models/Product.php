@@ -20,12 +20,10 @@ class Product extends Model
         return $this->hasOne('App\Models\Category', 'id', 'subcategory_id');
     }
 
-    // public function relProds(){
-    //     return $this->hasMany('App\Models\Product','cat_id','cat_id')->where('status','active')->orderBy('id','DESC')->limit(8);
-    // }
-    // public function getReview(){
-    //     return $this->hasMany('App\Models\ProductReview','product_id','id')->where('status','active')->orderBy('id','DESC');
-    // }
+    public function productImg()
+    {
+        return $this->hasMany('App\Models\ProductImg', 'product_id');
+    }
 
     public static function getProductBySlug($slug)
     {
