@@ -29,6 +29,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::post('/order-status/update', 'OrderController@statusUpdate')->name('order-update-status');
     Route::get('/order-detail/{order_number}', 'OrderController@detail')->name('order-detail');
     Route::post('/order-message/store', 'OrderController@messageStore')->name('order-message-store');
+    Route::post('/order-return-confirm', 'OrderController@returnConfirm')->name('order-return-confirm');
 
     Route::get('/members', 'MemberController@index');
     Route::post('/member-status/update', 'MemberController@statusUpdate')->name('member-update-status');
@@ -42,5 +43,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::get('/product/create', 'ProductController@create')->name('product-create');
     Route::post('/product-store', 'ProductController@store')->name('product-store');
     Route::get('/product-detail/{id}', 'ProductController@detail')->name('product-detail');
+    Route::post('/product-img-delete', 'ProductController@imgDelete')->name('product-img-delete');
+    Route::post('/product-sort-update', 'ProductController@sortUpdate')->name('product-sort-update');
+    Route::post('/product-update', 'ProductController@productUpdate')->name('product-update');
 
 });

@@ -22,7 +22,7 @@ class Product extends Model
 
     public function productImg()
     {
-        return $this->hasMany('App\Models\ProductImg', 'product_id');
+        return $this->hasMany('App\Models\ProductImg', 'product_id')->orderBy('sort', 'desc');
     }
 
     public static function getProductBySlug($slug)

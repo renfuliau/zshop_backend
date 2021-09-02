@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImg;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -16,9 +17,17 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::with('category')->with('subcategory')->get();
-        // dd($products);
         return view('layouts.product.index', compact('products'))
             ->with('product_status', $this->product_status);
+    }
+
+    public function statusUpdate(Request $request)
+    {
+        $product = Product::find($request->product_id);
+        $product['status'] = $request->status;
+        $product->save();
+
+        return redirect()->back();
     }
 
     public function create()
@@ -29,51 +38,30 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'title' => 'required',
-            'category_id' => 'required',
-            'slug' => 'required',
-            "summary" => "required",
-            "stock" => "required",
-            "price" => "required",
-            "special_price" => "required",
-            "description" => "required",
-            "photos" => "required",
-        ]);
-        // dd($request->all());
-        // dd($request->hasFile('photos'));
+        // $this->validate($request, [
+        //     'title' => 'required',
+        //     'category_id' => 'required',
+        //     'slug' => 'required',
+        //     "summary" => "required",
+        //     "stock" => "required",
+        //     "price" => "required",
+        //     "special_price" => "required",
+        //     "description" => "required",
+        //     "photos" => "required",
+        // ]);
         $product = Product::create($request->all());
-        // dd($products);
         if ($request->hasFile('photos')) {
             $allowedfileExtension = ['jpg', 'jpeg', 'png'];
             $files = $request->file('photos');
-            // dd($files);
             foreach ($files as $file) {
-                // $filename = $file->getClientOriginalName();
-                // dd($filename);
                 $extension = $file->getClientOriginalExtension();
-                // dd($extension);
                 $check = in_array($extension, $allowedfileExtension);
-                //dd($check);
                 if ($check) {
-                    $filepath_array = array();
-                    // $products = Product::create($request->all());
-                    // foreach ($request->photos as $photo) {
                     $filepath = '/storage/' . $file->store('photos');
-                    array_push($filepath_array, $filepath);
-                    // dd($filepath);
                     ProductImg::create([
                         'product_id' => $product->id,
                         'filepath' => $filepath
                     ]);
-                    // }
-                    $filepath_string = implode(',', $filepath_array);
-                    $product['photo'] = $filepath_string;
-                    $product->save();
-                    // dd($filepath_string);
-                    echo "Upload Successfully";
-                } else {
-                    echo '<div class="alert alert-warning"><strong>Warning!</strong> Sorry Only Upload png , jpg , doc</div>';
                 }
             }
         }
@@ -85,18 +73,59 @@ class ProductController extends Controller
         $product = Product::with('productImg')->find($id);
         $categories = Category::get();
 
-        // dd($product);
         return view('layouts.product.detail', compact('product', 'categories'));
     }
 
-    public function statusUpdate(Request $request)
+    public function imgDelete(Request $request)
     {
-        // dd($request->all());
+        $img = ProductImg::find($request->id);
+        $storage_name = substr($img['filepath'], 9);
+        Storage::delete($storage_name);
+        if ($img->delete()) {
+            return response('照片刪除成功');
+        }
+        return response('失敗');
+    }
+
+    public function sortUpdate(Request $request)
+    {
+        $img = ProductImg::find($request->id);
+        $img['sort'] = $request->sort;
+        if ($img->save()) {
+            return response('照片排序成功');
+        }
+        return response('失敗');
+    }
+
+    public function productUpdate(Request $request)
+    {
         $product = Product::find($request->product_id);
-        // dd($product);
-        $product['status'] = $request->status;
+        $product['title'] = $request->title;
+        $product['category_id'] = $request->category_id;
+        $product['slug'] = $request->slug;
+        $product['summary'] = $request->summary;
+        $product['stock'] = $request->stock;
+        $product['size'] = $request->size;
+        $product['price'] = $request->price;
+        $product['special_price'] = $request->special_price;
+        $product['description'] = $request->description;
         $product->save();
 
+        if ($request->hasFile('photos')) {
+            $allowedfileExtension = ['jpg', 'jpeg', 'png'];
+            $files = $request->file('photos');
+            foreach ($files as $file) {
+                $extension = $file->getClientOriginalExtension();
+                $check = in_array($extension, $allowedfileExtension);
+                if ($check) {
+                    $filepath = '/storage/' . $file->store('photos');
+                    ProductImg::create([
+                        'product_id' => $product->id,
+                        'filepath' => $filepath
+                    ]);
+                }
+            }
+        }
         return redirect()->back();
     }
 }

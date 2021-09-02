@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Models\Order;
 use App\Models\Message;
+use App\Models\OrderItem;
+use App\Models\RewardMoneyHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -74,5 +77,36 @@ class OrderController extends Controller
         $message->save();
 
         return response(['message' => '回覆成功']);
+    }
+
+    public function returnConfirm(Request $request)
+    {
+        $order = Order::getOrderWithReturnedItems($request->order_id);
+        $return_total = Order::getReturnOrderTotal($request->order_id);
+        $user = User::find($order->user_id);
+        $refund = $return_total;
+        if ($order->coupon) {
+            if ($order->coupon['coupon_type'] == 1) {
+                if ($order['subtotal'] - $return_total < $order->coupon['coupon_line']) {
+                    $refund = $return_total - $order->coupon['coupon_amount'];
+                }
+            }
+        }
+
+        $user['reward_money'] += $refund;
+        $user->save();
+
+        $reward_history = new RewardMoneyHistory();
+        $reward_history['user_id'] = $user['id'];
+        $reward_history['reward_item'] = $order['order_number'] . '，訂單退款';
+        $reward_history['amount'] = $refund;
+        $reward_history['total'] = $user['reward_money'];
+        $reward_history->save();
+
+        $order['status'] = 6;     
+        if ($order->save()) {
+            return response('退貨完成');
+        }
+        return response('失敗');
     }
 }

@@ -101,7 +101,7 @@
                 @endif
                 <input class="w-100 text-center" type="text" name="question" id="question" placeholder="輸入回覆內容">
                 <div class="text-center mt-2">
-                    <button class="btn qa-button">送出</button>
+                    <button class="btn border qa-button">送出</button>
                 </div>
             </div>
 
@@ -184,7 +184,7 @@
                                 @else
                                     {{-- <li class="reward_money">使用購物金： <span>$ -{{ $order->reward_money }}</span></li> --}}
                                     <li class="total last text-right" id="order_total_price">
-                                        退款金額<span>$ {{ $order->total }}</span></li>
+                                        退款金額<span>$ {{ $return_total }}</span></li>
                                     @if (!empty($order->coupon) && $order->coupon['coupon_type'] == 2)
                                         <li class="coupon text-right">
                                             優惠取消：
@@ -195,6 +195,16 @@
                         </ul>
                     </div>
                 </div>
+
+                @if ($order['status'] == 5)
+                    <div class="text-center mt-2">
+                        <button class="btn border return-btn">退貨</button>
+                    </div>
+                @endif
+
+                @if ($order['status'] == 6)
+                    <h3 class="text-primary text-center">退貨完成</h3>
+                @endif
             @endif
         </div>
     </div>
@@ -203,10 +213,9 @@
 
 @endsection
 
-@push('scripts')
+@section('scripts')
     <script>
         $('.qa-button').click(function() {
-            console.log('hi');
             var member_id = $('.member-id').val();
             console.log(member_id);
             var order_name = $('.order-name').text();
@@ -239,5 +248,30 @@
                 }
             });
         })
+
+        $('.return-btn').click(function() {
+            var order_id = $('#order-id').val();
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                method: 'POST',
+                url: '/admin/order-return-confirm',
+                data: {
+                    order_id: order_id,
+                },
+                success: function(res) {
+                    alert(res);
+                    document.location.reload(true);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error(textStatus + " " + errorThrown);
+                }
+            });
+        })
     </script>
-@endpush
+@endsection
