@@ -8,7 +8,7 @@ class UserLevel extends Model
 {
     protected $table = 'user_levels';
 
-    protected $fillable = ['name', 'level_up_line'];
+    protected $fillable = ['name', 'level_up_line', 'name_en', 'status'];
 
     public function users(){
         return $this->hasMany('App\User','id','user_level_id')->where('status','active');

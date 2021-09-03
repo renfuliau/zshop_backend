@@ -179,7 +179,7 @@
                                     {{-- <li class="reward_money">使用購物金： <span>$ -{{ $order->reward_money }}</span></li> --}}
                                     <li class="total last text-right" id="order_total_price">
                                         退款金額<span>$
-                                            {{ $order['subtotal'] - $return_total - $order->coupon['coupon_amount'] }}</span>
+                                            {{ $return_total - $order->coupon['coupon_amount'] }}</span>
                                     </li>
                                 @else
                                     {{-- <li class="reward_money">使用購物金： <span>$ -{{ $order->reward_money }}</span></li> --}}

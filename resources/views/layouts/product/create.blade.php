@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="col-12 mt-5 pt-5">
-        <h2>會員詳細資料</h2>
+        <h2>新增商品</h2>
 
         <div class="card-body">
             <div class="row d-flex justify-content-center">

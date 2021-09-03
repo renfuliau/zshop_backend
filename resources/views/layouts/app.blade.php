@@ -77,6 +77,9 @@
                 <div class="sidebar-sticky mt-5 pt-5">
                     <ul class="nav flex-column">
                         <li class="nav-item">
+                            <a class="nav-link" href="/admin/member-level"><h5>會員等級管理</h5></a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="/admin/members"><h5>會員管理</h5></a>
                         </li>
                         <li class="nav-item">
@@ -94,12 +97,12 @@
                         {{-- <li class="nav-item">
                             <a class="nav-link" href="/admin/order"><h5>庫存管理</h5></a>
                         </li> --}}
-                        {{-- <li class="nav-item">
-                            <a class="nav-link" href="/admin/order"><h5>優惠管理</h5></a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/coupon"><h5>優惠管理</h5></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/admin/order"><h5>客服管理</h5></a>
-                        </li> --}}
+                            <a class="nav-link" href="/admin/messages"><h5>客服管理</h5></a>
+                        </li>
                         {{-- <li class="nav-item">
                             <a class="nav-link" href="/admin/order">權限管理</a>
                         </li> --}}
