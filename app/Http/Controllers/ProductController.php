@@ -16,7 +16,7 @@ class ProductController extends Controller
     ];
     public function index()
     {
-        $products = Product::with('category')->with('subcategory')->get();
+        $products = Product::with('category')->with('subcategory')->paginate(15);
         return view('layouts.product.index', compact('products'))
             ->with('product_status', $this->product_status);
     }
@@ -25,8 +25,11 @@ class ProductController extends Controller
     {
         $product = Product::find($request->product_id);
         $product['status'] = $request->status;
-        $product->save();
-
+        if ($product->save()) {
+            $request->session()->flash('alert-success', '變更狀態成功');
+            return redirect()->back();
+        }
+        $request->session()->flash('alert-danger', '變更狀態失敗');
         return redirect()->back();
     }
 
@@ -38,17 +41,37 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        // $this->validate($request, [
-        //     'title' => 'required',
-        //     'category_id' => 'required',
-        //     'slug' => 'required',
-        //     "summary" => "required",
-        //     "stock" => "required",
-        //     "price" => "required",
-        //     "special_price" => "required",
-        //     "description" => "required",
-        //     "photos" => "required",
-        // ]);
+        $message = [
+            'required' => ':attribute 不能為空'
+        ];
+        $attribute = [
+            "photos" => "商品圖片",
+            'title' => '商品名稱',
+            'category_id' => '商品類別',
+            'slug' => '型號',
+            "summary" => "商品簡述",
+            "stock" => "庫存",
+            "price" => "原價",
+            "special_price" => "特價",
+            "description" => "商品描述",
+        ];
+        $this->validate($request, [
+            "photos" => "required",
+            'title' => 'required',
+            'category_id' => 'required',
+            'slug' => 'required',
+            "summary" => "required",
+            "stock" => "required",
+            "price" => "required",
+            "special_price" => "required",
+            "description" => "required",
+        ], $message, $attribute);
+        
+        if ($request->price < $request->special_price) {
+            $request->session()->flash('alert-danger', '特價金額不得大於原價金額');
+            return back();
+        }
+
         $product = Product::create($request->all());
         if ($request->hasFile('photos')) {
             $allowedfileExtension = ['jpg', 'jpeg', 'png'];
@@ -99,6 +122,11 @@ class ProductController extends Controller
 
     public function productUpdate(Request $request)
     {
+        if ($request->price < $request->special_price) {
+            $request->session()->flash('alert-danger', '特價金額不得大於原價金額');
+            return redirect()->back();
+        }
+
         $product = Product::find($request->product_id);
         $product['title'] = $request->title;
         $product['category_id'] = $request->category_id;

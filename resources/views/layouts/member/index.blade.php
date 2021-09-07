@@ -11,7 +11,7 @@
                         <th></th>
                         <th>Email</th>
                         <th>會員等級</th>
-                        {{-- <th>累積消費金額</th> --}}
+                        <th>累積消費金額</th>
                         <th>現有購物金</th>
                         <th>會員狀態</th>
                         <th>詳細資料</th>
@@ -42,7 +42,7 @@
                                     <button class="btn border" type="submit">更改</button>
                                 </form>
                             </td>
-                            {{-- <td>{{ $member->user['email'] }}</td> --}}
+                            <td>$ {{ $member['total_shopping_amount'] }}</td>
                             <td>$ {{ $member['reward_money'] }}</td>
                             <td>
                                 <form class="form-horizontal" method="POST" action="{{ route('member-update-status') }}">
@@ -68,24 +68,8 @@
                     @endforeach
                 </tbody>
             @endif
-
         </table>
-        {{-- <div class="pagination">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div> --}}
+        <span>{{ $members->links() }}</span>
     </div>
 
 

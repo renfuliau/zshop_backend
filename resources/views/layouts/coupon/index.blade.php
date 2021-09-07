@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
     <div class="table-responsive mt-5 pt-5">
         <div class="row justify-content-between">
             <h2>優惠管理</h2>
@@ -52,6 +51,7 @@
                 @endforeach
             </tbody>
         </table>
+        <span>{{ $coupons->links() }}</span>
     </div>
 @endsection
 @section('scripts')

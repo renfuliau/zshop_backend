@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\RewardMoneyHistory;
-use App\Models\UserLevel;
 use App\User;
+use App\Models\UserLevel;
 use Illuminate\Http\Request;
+use App\Models\RewardMoneyHistory;
 
 class MemberController extends Controller
 {
@@ -21,7 +21,7 @@ class MemberController extends Controller
 
     public function index()
     {
-        $members = User::with('userLevel')->where('role', 'user')->get();
+        $members = User::with('userLevel')->where('role', 'user')->paginate(15);
         // dd($members);
         $member_level = UserLevel::get();
         // dd($member_level);
@@ -45,6 +45,7 @@ class MemberController extends Controller
         $user = User::find($request->member_id);
         // dd($request->all());
         $user['user_level_id'] = $request->level;
+        $user['total_shopping_amount'] = UserLevel::find($request->level)->level_up_line;
         $user->save();
 
         return redirect()->back();
@@ -52,10 +53,12 @@ class MemberController extends Controller
 
     public function detail($id)
     {
-        $member = User::find($id);
-        // dd($member);
+        $member = User::with('rewardMoneyHistory')->find($id);
+        // dd($member->rewardMoneyHistory);
+        $reward_history = RewardMoneyHistory::orderBy('id', 'desc')->where('user_id', $id)->paginate(5);
+        // dd($reward_history);
 
-        return view('layouts.member.detail', compact('member'));
+        return view('layouts.member.detail', compact('member', 'reward_history'));
     }
 
     public function profileUpdate(Request $request, $id)

@@ -9,7 +9,7 @@ class MessageController extends Controller
 {
     public function index()
     {
-        $messages = Message::where('order_id', null)->get();
+        $messages = Message::where('order_id', null)->paginate();
         // dd($messages);
         
         return view('layouts.message.index', compact('messages'));

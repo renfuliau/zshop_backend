@@ -18,7 +18,7 @@ class CouponController extends Controller
 
     public function index()
     {
-        $coupons = Coupon::get();
+        $coupons = Coupon::paginate();
         
         return view('layouts.coupon.index', compact('coupons'))
         ->with('coupon_status', $this->coupon_status)
@@ -29,8 +29,12 @@ class CouponController extends Controller
     {
         $coupon = Coupon::find($request->coupon_id);
         $coupon['status'] = $request->status;
-        $coupon->save();
 
+        if ($coupon->save()) {
+            $request->session()->flash('alert-success', '狀態更改成功');
+            return redirect()->back();
+        }
+        $request->session()->flash('alert-danger', '狀態更改失敗');
         return redirect()->back();
     }
 
@@ -42,18 +46,24 @@ class CouponController extends Controller
 
     public function store(Request $request)
     {
-        // $this->validate($request, [
-        //     'title' => 'required',
-        //     'category_id' => 'required',
-        //     'slug' => 'required',
-        //     "summary" => "required",
-        //     "stock" => "required",
-        //     "price" => "required",
-        //     "special_price" => "required",
-        //     "description" => "required",
-        //     "photos" => "required",
-        // ]);
-        Coupon::create($request->all());
+        $message = [
+            'required' => ':attribute 不能為空'
+        ];
+        $attribute = [
+            "name" => "優惠名稱",
+            'coupon_line' => '優惠達成金額',
+            'coupon_amount' => '優惠金額',
+        ];
+        $this->validate($request, [
+            'name' => 'required',
+            'coupon_line' => 'required',
+            'coupon_amount' => 'required',
+        ], $message, $attribute);
+        if (Coupon::create($request->all())) {
+            $request->session()->flash('alert-success', '新增優惠成功');
+            return redirect()->route('coupon-index');
+        }
+        $request->session()->flash('alert-danger', '新增優惠失敗');
         return redirect()->route('coupon-index');
     }
 
@@ -74,8 +84,11 @@ class CouponController extends Controller
         $coupon->coupon_line = $request->coupon_line;
         $coupon->coupon_amount = $request->coupon_amount;
         // dd($coupon);
-        $coupon->save();
-
+        if ($coupon->save()) {
+            $request->session()->flash('alert-success', '編輯優惠成功');
+            return redirect()->route('coupon-index');
+        }
+        $request->session()->flash('alert-danger', '編輯優惠失敗');
         return redirect()->route('coupon-index');
     }
 }

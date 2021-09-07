@@ -29,7 +29,7 @@ class OrderController extends Controller
 
     public function index()
     {
-        $orders = Order::with('user')->orderBy('id', 'desc')->get();
+        $orders = Order::with('user')->orderBy('id', 'desc')->paginate(15);
         // $orders->nextPageUrl();
         // dd($orders);
         return view('layouts.order.index', compact('orders'))
@@ -42,8 +42,12 @@ class OrderController extends Controller
         $order = Order::find($request->order_id);
         // dd($order);
         $order['status'] = $request->status;
-        $order->save();
+        if($order->save()) {
+            $request->session()->flash('alert-success', '變更狀態成功');
+            return redirect()->back();
+        }
 
+        $request->session()->flash('alert-danger', '變更狀態失敗');
         return redirect()->back();
     }
 

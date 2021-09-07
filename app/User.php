@@ -46,4 +46,9 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\Models\UserLevel', 'id', 'user_level_id');
     }
+
+    public function rewardMoneyHistory()
+    {
+        return $this->hasMany('App\Models\RewardMoneyHistory', 'user_id')->orderBy('id', 'desc')->limit(10);
+    }
 }

@@ -47,6 +47,7 @@
                 @endforeach
             </tbody>
         </table>
+        <span>{{ $messages->links() }}</span>
     </div>
 @endsection
 @section('scripts')

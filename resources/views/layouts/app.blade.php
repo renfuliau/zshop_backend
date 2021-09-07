@@ -77,13 +77,19 @@
                 <div class="sidebar-sticky mt-5 pt-5">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link" href="/admin/member-level"><h5>會員等級管理</h5></a>
+                            <a class="nav-link" href="/admin/member-level">
+                                <h5>會員等級管理</h5>
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/admin/members"><h5>會員管理</h5></a>
+                            <a class="nav-link" href="/admin/members">
+                                <h5>會員管理</h5>
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/admin/orders"><h5>訂單管理</h5></a>
+                            <a class="nav-link" href="/admin/orders">
+                                <h5>訂單管理</h5>
+                            </a>
                         </li>
                         {{-- <li class="nav-item">
                                 <a class="nav-link" href="/admin/news">退貨管理</a>
@@ -92,16 +98,22 @@
                             <a class="nav-link" href="/admin/order"><h5>分類管理</h5></a>
                         </li> --}}
                         <li class="nav-item">
-                            <a class="nav-link" href="/admin/products"><h5>商品管理</h5></a>
+                            <a class="nav-link" href="/admin/products">
+                                <h5>商品管理</h5>
+                            </a>
                         </li>
                         {{-- <li class="nav-item">
                             <a class="nav-link" href="/admin/order"><h5>庫存管理</h5></a>
                         </li> --}}
                         <li class="nav-item">
-                            <a class="nav-link" href="/admin/coupon"><h5>優惠管理</h5></a>
+                            <a class="nav-link" href="/admin/coupon">
+                                <h5>優惠管理</h5>
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/admin/messages"><h5>客服管理</h5></a>
+                            <a class="nav-link" href="/admin/messages">
+                                <h5>客服管理</h5>
+                            </a>
                         </li>
                         {{-- <li class="nav-item">
                             <a class="nav-link" href="/admin/order">權限管理</a>
@@ -111,6 +123,21 @@
             </nav>
 
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <div class="flash-message pt-5 mt-5">
+                    @foreach (['danger', 'warning', 'success', 'info'] as $msg)
+                        @if (Session::has('alert-' . $msg))
+
+                            <p class="alert alert-{{ $msg }}">{{ Session::get('alert-' . $msg) }} <a
+                                    href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            </p>
+                        @endif
+                    @endforeach
+                </div> <!-- end .flash-message -->
+                @if ($errors->any())
+                    <p class="alert alert-danger">{{ $errors->first() }} <a href="#"
+                            class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    </p>
+                @endif
                 <div
                     class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 

@@ -32,38 +32,38 @@
                                     </div>
                                     <div class="form-group col-lg-6 col-12">
                                         <label for="title" class="col-form-label">商品名稱</label>
-                                        <input id="title" type="text" name="title" value="" class="form-control" required>
+                                        <input id="title" type="text" name="title" value="{{ old('title') }}" class="form-control" required>
                                     </div>
 
                                     <div class="form-group col-lg-6 col-12">
                                         <label for="slug" class="col-form-label">型號</label>
-                                        <input id="slug" type="text" name="slug" value="" class="form-control">
+                                        <input id="slug" type="text" name="slug" value="{{ old('slug') }}" class="form-control" required>
                                     </div>
                                     <div class="form-group col-lg-6 col-12">
                                         <label for="summary" class="col-form-label">商品簡述</label>
-                                        <input id="summary" type="text" name="summary" value="" class="form-control">
+                                        <input id="summary" type="text" name="summary" value="" class="form-control" required>
                                     </div>
                                     <div class="form-group col-lg-6 col-12">
                                         <label for="stock" class="col-form-label">庫存</label>
-                                        <input id="stock" type="text" name="stock" value="" class="form-control">
+                                        <input id="stock" type="text" name="stock" value="" class="form-control" required>
                                     </div>
                                     <div class="form-group col-lg-6 col-12">
                                         <label for="size" class="col-form-label">尺碼</label>
-                                        <input id="size" type="text" name="size" value="" class="form-control">
+                                        <input id="size" type="text" name="size" value="" class="form-control" required>
                                     </div>
                                     <div class="form-group col-lg-6 col-12">
                                         <label for="price" class="col-form-label">原價</label>
-                                        <input id="price" type="text" name="price" value="" class="form-control">
+                                        <input id="price" type="text" name="price" value="" class="form-control" requiredvv>
                                     </div>
                                     <div class="form-group col-lg-6 col-12">
                                         <label for="special_price" class="col-form-label">特價</label>
                                         <input id="special_price" type="text" name="special_price" value=""
-                                            class="form-control">
+                                            class="form-control" required>
                                     </div>
                                     <div class="form-group col-12">
                                         <label for="description" class="col-form-label">商品描述</label>
                                         <textarea id="description" type="text" name="description" value=""
-                                            class="form-control">
+                                            class="form-control" required>
                                                 </textarea>
                                     </div>
                                     <button type="submit" class="btn btn-success btn-sm">送出</button>

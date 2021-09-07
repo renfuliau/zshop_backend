@@ -50,6 +50,7 @@
                 @endforeach
             </tbody>
         </table>
+        <span>{{ $member_levels->links() }}</span>
     </div>
 @endsection
 @section('scripts')

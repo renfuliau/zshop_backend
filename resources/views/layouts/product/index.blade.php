@@ -74,6 +74,7 @@
                 @endforeach
             </tbody>
         </table>
+        <span>{{ $products->links() }}</span>
     </div>
 @endsection
 @section('scripts')

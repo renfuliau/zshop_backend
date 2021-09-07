@@ -54,7 +54,7 @@
                                     <div class="form-group col-lg-6 col-12">
                                         <label for="title" class="col-form-label">商品名稱</label>
                                         <input id="title" type="text" name="title" value="{{ $product['title'] }}"
-                                            class="form-control">
+                                            class="form-control" place-holder="商品名稱">
                                     </div>
 
                                     <div class="form-group col-lg-6 col-12">
@@ -146,11 +146,11 @@
             var img_id = this.getAttribute("data-product-img-id");
             var img_sort = this.getAttribute("data-product-img-sort");
 
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
 
             $.ajax({
                 method: 'POST',

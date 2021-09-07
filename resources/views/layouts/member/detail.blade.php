@@ -75,6 +75,32 @@
                 </div>
             </div>
         </div>
+
+        <table class="table shopping-summery">
+            <thead>
+                <tr class="main-hading">
+                    <th class="text-center">日期</th>
+                    <th class="text-center">購物金項目</th>
+                    <th class="text-center">購物金款項</th>
+                    <th class="text-center">購物金餘額</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if ($reward_history)
+                @foreach ($reward_history as $value)
+                <tr>
+                    <td class="date text-center" data-title="date"><span>{{ $value->created_at }}</span></td>
+                    <td class="reward_item text-center" data-title="reward_item">
+                        <span>{{ $value->reward_item }}</span>
+                    </td>
+                    <td class="amount text-center" data-title="amount"><span>${{ $value->amount }}</span></td>
+                    <td class="total text-center" data-title="total"><span>${{ $value->total }}</span></td>
+                </tr>
+                @endforeach
+                @endif
+            </tbody>
+        </table>
+        <span>{{ $reward_history->links() }}</span>
     </div>
     {{-- </div> --}}
     {{-- </div> --}}

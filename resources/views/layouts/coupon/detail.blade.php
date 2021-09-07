@@ -42,12 +42,12 @@
                                         </div>
                                         <div class="form-group col-12">
                                             <label for="coupon_line" class="col-form-label">優惠達成金額</label>
-                                            <input id="coupon_line" type="text" name="coupon_line"
+                                            <input id="coupon_line" type="number" name="coupon_line"
                                                 value="{{ $coupon['coupon_line'] }}" class="form-control">
                                         </div>
                                         <div class="form-group col-12">
                                             <label for="coupon_amount" class="col-form-label">優惠金額</label>
-                                            <input id="coupon_amount" type="text" name="coupon_amount"
+                                            <input id="coupon_amount" type="number" name="coupon_amount"
                                                 value="{{ $coupon['coupon_amount'] }}" class="form-control">
                                         </div>
                                         <button type="submit" class="btn btn-success btn-sm">送出</button>
