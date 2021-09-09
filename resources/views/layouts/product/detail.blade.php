@@ -168,5 +168,11 @@
                 }
             });
         })
+
+        $('.category-picker').on('change', function() {
+            var category_id = $(this).val();
+            console.log(category_id);
+            $('#category_id').val(category_id);
+        })
     </script>
 @endsection
