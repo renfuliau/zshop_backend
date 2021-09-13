@@ -26,6 +26,10 @@ class MemberLevelController extends Controller
         $member_level = UserLevel::find($request->member_level_id);
         $member_level['status'] = $request->status;
         $member_level->save();
+        $users = User::get();
+        // dd($users);
+        $this->checkUsersLevel($users);
+        // dd($member_level);
 
         return redirect()->back();
     }
