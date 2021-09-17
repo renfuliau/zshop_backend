@@ -104,14 +104,25 @@
                     <button class="btn border qa-button">送出</button>
                 </div>
             </div>
-
-            @if ($order['status'] > 4)
-                {{-- <h5 class="py-3 text-center">退貨</h5> --}}
-
-                <table class="table shopping-summery bg-danger" style="height: auto;">
+        </div>
+        @if ($order['status'] > 4)
+            {{-- <h5 class="py-3 text-center">退貨</h5> --}}
+            @if (!empty($order->coupon) && $order->coupon['coupon_type'] == 2 && $order['subtotal'] - array_sum($return_total_array) < $order->coupon['coupon_line'])
+                <h6 class="coupon text-right">
+                    優惠取消：
+                    {{ $order->coupon['name'] }}<span>$
+                        -{{ $order->coupon['coupon_amount'] }}</span></h6>
+            @endif
+            @foreach ($order->returnOrders as $key => $returnOrder)
+                <div class="col-12 border p-4">
+                    @if ($returnOrder->is_refund == 0)
+                        <table class="table shopping-summery bg-danger" style="height: auto;">
+                        @else
+                            <table class="table shopping-summery bg-success" style="height: auto;">
+                    @endif
                     <thead>
                         <tr class="main-hading">
-                            <h5 class="py-3 text-center">退貨明細</h5>
+                            <h2 class="py-3 text-center">退貨明細</h2>
 
                             <th class="col-4 text-center">商品名稱</th>
                             <th class="text-center">單價</th>
@@ -120,7 +131,7 @@
                         </tr>
                     </thead>
                     <tbody id="cart_item_list">
-                        @foreach ($order->orderItems as $orderItem)
+                        @foreach ($returnOrder->orderItems as $orderItem)
                             @if ($orderItem['is_return'] == 1)
                                 <tr>
                                     <td class="product-des text-center" data-title="Description">
@@ -141,72 +152,68 @@
                             @endif
                         @endforeach
                     </tbody>
-                </table>
-                <div class="single-widget col-12 mb-5 pb-5">
-                    <div class="content">
-                        <ul>
-                            @if ($order['subtotal'] == $return_total)
-                                @if (!empty($order->coupon) && $order->coupon['coupon_type'] == 1)
-                                    <li class="coupon text-right">優惠取消：
-                                        {{ $order->coupon['name'] }}<span>$
-                                            -{{ $order->coupon['coupon_amount'] }}</span></li>
-                                    <li class="total last text-right" id="order_total_price">
-                                        退款金額<span>$
-                                            {{ $order['total'] + $order->reward_money }}</span>
-                                    </li>
-                                @else
-                                    @if (!empty($order->coupon) && $order->coupon['coupon_type'] == 2)
-                                        <li class="coupon text-right">
-                                            優惠取消：
+                    </table>
+                    <div class="single-widget col-12 mb-5 pb-5">
+                        <div class="content">
+                            <ul>
+                                @if ($order['subtotal'] == array_sum($return_total_array))
+                                    @if (!empty($order->coupon) && $order->coupon['coupon_type'] == 1)
+                                        <li class="coupon text-right">優惠取消：
                                             {{ $order->coupon['name'] }}<span>$
                                                 -{{ $order->coupon['coupon_amount'] }}</span></li>
                                         <li class="total last text-right" id="order_total_price">
                                             退款金額<span>$
-                                                {{ $order->subtotal - $order->coupon['coupon_amount'] }}</span></li>
+                                                {{ $order['total'] + $order->reward_money }}</span>
+                                        </li>
                                     @else
-                                        <li class="total last text-right" id="order_total_price">
-                                            退款金額<span>$
-                                                {{ $order->subtotal }}</span></li>
+                                        @if (!empty($order->coupon) && $order->coupon['coupon_type'] == 2)
+                                            <li class="coupon text-right">
+                                                優惠取消：
+                                                {{ $order->coupon['name'] }}<span>$
+                                                    -{{ $order->coupon['coupon_amount'] }}</span></li>
+                                            <li class="total last text-right" id="order_total_price">
+                                                退款金額<span>$
+                                                    {{ $order->subtotal - $order->coupon['coupon_amount'] }}</span>
+                                            </li>
+                                        @else
+                                            <li class="total last text-right" id="order_total_price">
+                                                退款金額<span>$
+                                                    {{ $order->subtotal }}</span></li>
+                                        @endif
+
                                     @endif
 
-                                @endif
-
-                            @elseif (!empty($order->coupon) && $order->coupon['coupon_type'] == 1 &&
-                                $order['subtotal'] - $return_total < $order->coupon['coupon_line'])
-                                    <li class="coupon text-right">優惠取消：
-                                        {{ $order->coupon['name'] }}<span>$
-                                            -{{ $order->coupon['coupon_amount'] }}</span></li>
-                                    {{-- <li class="reward_money">使用購物金： <span>$ -{{ $order->reward_money }}</span></li> --}}
-                                    <li class="total last text-right" id="order_total_price">
-                                        退款金額<span>$
-                                            {{ $return_total - $order->coupon['coupon_amount'] }}</span>
-                                    </li>
-                                @else
-                                    {{-- <li class="reward_money">使用購物金： <span>$ -{{ $order->reward_money }}</span></li> --}}
-                                    <li class="total last text-right" id="order_total_price">
-                                        退款金額<span>$ {{ $return_total }}</span></li>
-                                    @if (!empty($order->coupon) && $order->coupon['coupon_type'] == 2)
-                                        <li class="coupon text-right">
-                                            優惠取消：
+                                @elseif (!empty($order->coupon) && $order->coupon['coupon_type'] == 1 &&
+                                    $order['subtotal'] - array_sum($return_total_array) < $order->coupon['coupon_line'])
+                                        <li class="coupon text-right">優惠取消：
                                             {{ $order->coupon['name'] }}<span>$
                                                 -{{ $order->coupon['coupon_amount'] }}</span></li>
-                                    @endif
-                            @endif
-                        </ul>
+                                        {{-- <li class="reward_money">使用購物金： <span>$ -{{ $order->reward_money }}</span></li> --}}
+                                        <li class="total last text-right" id="order_total_price">
+                                            退款金額<span>$
+                                                {{ $return_total_array[$key] - $order->coupon['coupon_amount'] }}</span>
+                                        </li>
+                                    @else
+                                        {{-- <li class="reward_money">使用購物金： <span>$ -{{ $order->reward_money }}</span></li> --}}
+                                        <li class="total last text-right" id="order_total_price">
+                                            退款金額<span>$ {{ $return_total_array[$key] }}</span></li>
+                                @endif
+                            </ul>
+                        </div>
                     </div>
+                    @if ($returnOrder['is_refund'] == 0)
+                        <div class="text-center">
+                            <button class="btn border return-btn"
+                                data-return-order-id="{{ $returnOrder['id'] }}">退貨</button>
+                        </div>
+                    @endif
+
+                    @if ($returnOrder['is_refund'] == 1)
+                        <h3 class="text-primary text-center">退貨完成</h3>
+                    @endif
                 </div>
-
-                @if ($order['status'] == 5)
-                    <div class="text-center mt-2">
-                        <button class="btn border return-btn">退貨</button>
-                    </div>
-                @endif
-
-                @if ($order['status'] == 6)
-                    <h3 class="text-primary text-center">退貨完成</h3>
-                @endif
-            @endif
-        </div>
+            @endforeach
+        @endif
     </div>
     {{-- </div> --}}
     {{-- </div> --}}
@@ -251,6 +258,7 @@
 
         $('.return-btn').click(function() {
             var order_id = $('#order-id').val();
+            var return_order_id = $(this).attr('data-return-order-id');
 
             $.ajaxSetup({
                 headers: {
@@ -263,6 +271,7 @@
                 url: '/admin/order-return-confirm',
                 data: {
                     order_id: order_id,
+                    return_order_id: return_order_id,
                 },
                 success: function(res) {
                     alert(res);

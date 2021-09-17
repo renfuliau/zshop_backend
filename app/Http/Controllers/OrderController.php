@@ -54,19 +54,21 @@ class OrderController extends Controller
     public function detail($order_number)
     {
         // dd($order_number);
-        $order = Order::with('orderItems')->with('coupon')->where('order_number', $order_number)->first();
+        $order = Order::with('orderItems')->with('coupon')->with('returnOrders')->where('order_number', $order_number)->first();
         $messages = Message::where('order_id', $order['id'])->orderBy('created_at', 'asc')->get();
-        $return_total = 0;
+        $return_total_array = [];
         if ($order['status'] > 4) {
-            foreach ($order->orderItems as $orderItem) {
-                if ($orderItem['is_return'] == 1) {
+            foreach ($order->returnOrders as $returnOrder) {
+                $return_total = 0;
+                foreach ($returnOrder->orderItems as $orderItem) {
                     $return_total += ($orderItem['price'] * $orderItem['quantity']);
                 }
+                array_push($return_total_array, $return_total);
             }
         }
 
         // dd($order);
-        return view('layouts.order.detail', compact('order', 'messages', 'return_total'));
+        return view('layouts.order.detail', compact('order', 'messages', 'return_total_array'));
     }
 
     public function messageStore(Request $request)
@@ -85,8 +87,9 @@ class OrderController extends Controller
 
     public function returnConfirm(Request $request)
     {
-        $order = Order::getOrderWithReturnedItems($request->order_id);
-        $return_total = Order::getReturnOrderTotal($request->order_id);
+        $order = Order::with('returnOrders')->find($request->order_id);
+        $return_total = Order::getReturnOrderTotal($request->order_id, $request->return_order_id);
+        // dd($return_total);
         $user = User::find($order->user_id);
         $refund = $return_total;
         if ($order->coupon) {
@@ -107,10 +110,21 @@ class OrderController extends Controller
         $reward_history['total'] = $user['reward_money'];
         $reward_history->save();
 
-        $order['status'] = 6;     
-        if ($order->save()) {
-            return response('退貨完成');
+        // dd($order->returnOrders);
+        $no_refund_order_amount = 0;
+        foreach ($order->returnOrders as $returnOrder) {
+            if ($returnOrder['id'] == $request->return_order_id) {
+                $returnOrder['is_refund'] = 1;
+                $returnOrder->save();
+            }
+            if ($returnOrder['is_refund'] == 0) {
+                $no_refund_order_amount += 1;
+            }
         }
-        return response('失敗');
+        if ($no_refund_order_amount == 0) {
+            $order['status'] = 6;
+            $order->save();
+        }
+        return response('退貨完成');
     }
 }
